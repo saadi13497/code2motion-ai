@@ -6,7 +6,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const API_KEY = 'afllm_ai038UovQOvDXkrzT0u90nydCkbno6cu'
+const API_KEY = Deno.env.get('API_FREE_LLM')
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -35,6 +35,14 @@ serve(async (req) => {
     }
 
     const { prompt } = await req.json()
+
+    if (!API_KEY) {
+      console.error('API_FREE_LLM environment variable not set')
+      return new Response(
+        JSON.stringify({ error: 'API key not configured' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      )
+    }
 
     if (!prompt || prompt.trim().length === 0) {
       return new Response(
