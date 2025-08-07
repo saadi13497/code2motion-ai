@@ -55,7 +55,7 @@ const Hero = () => {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-scale-in">
           <Button variant="hero" size="lg" asChild>
-            <Link to="/signup">
+            <Link to="/auth">
               <Sparkles className="w-5 h-5" />
               Try Now
               <ArrowRight className="w-5 h-5" />
