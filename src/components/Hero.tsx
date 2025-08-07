@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code, Zap, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import heroIllustration from "@/assets/hero-illustration.png";
 
 const Hero = () => {
   return (
@@ -42,12 +43,21 @@ const Hero = () => {
           Perfect for developers who want to create stunning web effects without the complexity.
         </p>
 
+        {/* Hero Illustration */}
+        <div className="mb-12 max-w-4xl mx-auto">
+          <img 
+            src={heroIllustration} 
+            alt="Code transforming into animated web elements" 
+            className="w-full h-auto rounded-2xl shadow-elegant opacity-90 hover:opacity-100 transition-opacity duration-300"
+          />
+        </div>
+
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-scale-in">
           <Button variant="hero" size="lg" asChild>
-            <Link to="/generator">
+            <Link to="/signup">
               <Sparkles className="w-5 h-5" />
-              Start Creating
+              Try Now
               <ArrowRight className="w-5 h-5" />
             </Link>
           </Button>
