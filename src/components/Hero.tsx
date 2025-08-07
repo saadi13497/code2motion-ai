@@ -30,7 +30,7 @@ const Hero = () => {
 
         {/* Main Heading */}
         <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 animate-fade-in">
-          <span className="block text-foreground">Transform Words into</span>
+          <span className="block text-foreground mt-16">Transform Words into</span>
           <span className="block mt-4 bg-gradient-to-r from-primary via-accent to-primary-glow bg-clip-text text-transparent animate-glow-pulse px-4 py-2 rounded-2xl">
             Web Animations
           </span>
