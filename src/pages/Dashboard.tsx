@@ -13,6 +13,11 @@ const Dashboard = () => {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [sessionId] = useState(() => crypto.randomUUID());
+  const [generatedAnimation, setGeneratedAnimation] = useState<{
+    html: string;
+    css: string;
+    description: string;
+  } | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -74,18 +79,28 @@ const Dashboard = () => {
     
     setLoading(true);
     try {
-      // Save prompt to history
-      await supabase
-        .from("prompt_history")
-        .insert({
-          prompt: sanitizedPrompt,
-          session_id: sessionId,
-        });
-
-      toast({
-        title: "Success!",
-        description: "Animation generation started. This feature will be fully implemented soon.",
+      // Call the edge function to generate animation
+      const { data, error } = await supabase.functions.invoke('generate-animation', {
+        body: { prompt: sanitizedPrompt }
       });
+
+      if (error) {
+        console.error('Error calling edge function:', error);
+        toast({
+          title: "Error",
+          description: "Failed to generate animation. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data.animation) {
+        setGeneratedAnimation(data.animation);
+        toast({
+          title: "Success!",
+          description: "Animation generated successfully!",
+        });
+      }
       
       setPrompt("");
     } catch (error: any) {
@@ -149,17 +164,51 @@ const Dashboard = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Preview & History</CardTitle>
+              <CardTitle>Preview & Animation</CardTitle>
               <CardDescription>
-                Your generated animations will appear here
+                Live preview of your generated animation
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-center h-64 border-2 border-dashed border-muted-foreground/25 rounded-lg">
-                <p className="text-muted-foreground">
-                  Animation preview will be displayed here
-                </p>
-              </div>
+              {generatedAnimation ? (
+                <div className="space-y-4">
+                  <div className="p-4 border rounded-lg bg-background">
+                    <h3 className="font-medium mb-2">Live Preview</h3>
+                    <div 
+                      className="border rounded p-4 min-h-[200px] flex items-center justify-center bg-gradient-to-br from-background to-muted"
+                      dangerouslySetInnerHTML={{ 
+                        __html: `<style>${generatedAnimation.css}</style>${generatedAnimation.html}` 
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="font-medium">Description</h3>
+                    <p className="text-sm text-muted-foreground">{generatedAnimation.description}</p>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <h3 className="font-medium mb-2">HTML</h3>
+                      <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+                        <code>{generatedAnimation.html}</code>
+                      </pre>
+                    </div>
+                    <div>
+                      <h3 className="font-medium mb-2">CSS</h3>
+                      <pre className="text-xs bg-muted p-3 rounded overflow-x-auto max-h-[200px] overflow-y-auto">
+                        <code>{generatedAnimation.css}</code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64 border-2 border-dashed border-muted-foreground/25 rounded-lg">
+                  <p className="text-muted-foreground">
+                    Enter a prompt above to generate and preview your animation
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
