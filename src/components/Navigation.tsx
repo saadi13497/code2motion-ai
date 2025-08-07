@@ -10,9 +10,9 @@ const Navigation = () => {
 
   const navItems = [
     { path: "/", label: "Home", icon: Code },
-    { path: "/generator", label: "Generator", icon: Sparkles },
+    { path: "/how-it-works", label: "How It Works", icon: Info },
     { path: "/gallery", label: "Gallery", icon: Image },
-    { path: "/about", label: "About", icon: Info },
+    { path: "/about", label: "About", icon: Sparkles },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -53,9 +53,9 @@ const Navigation = () => {
           {/* CTA Button */}
           <div className="hidden md:block">
             <Button variant="hero" size="sm" asChild>
-              <Link to="/generator">
+              <Link to="/auth">
                 <Sparkles className="w-4 h-4" />
-                Generate Now
+                Get Started
               </Link>
             </Button>
           </div>
@@ -93,9 +93,9 @@ const Navigation = () => {
               ))}
               <div className="pt-2">
                 <Button variant="hero" size="sm" className="w-full" asChild>
-                  <Link to="/generator" onClick={() => setIsOpen(false)}>
+                  <Link to="/auth" onClick={() => setIsOpen(false)}>
                     <Sparkles className="w-4 h-4" />
-                    Generate Now
+                    Get Started
                   </Link>
                 </Button>
               </div>
